@@ -28,7 +28,23 @@ site
 
 ## maven命令
 
-maven命令是phrase粒度，比如 maven clean package，是执行clean生命周期的pre-clean、clean阶段，default生命周期的package之前的（包括package）全部阶段
+### 构建命令
+
+maven构建命令是phrase粒度，比如 maven clean package，是执行clean生命周期的pre-clean、clean阶段，default生命周期的package之前的（包括package）全部阶段
+
+### 查看依赖
+
+基础版
+
+maven dependency:tree
+
+详情版
+
+maven dependency:tree -Dverbose
+
+指定关注的组件
+
+maven dependency:tree -Dverbose -Dincludes=groupId:artifactId
 
 ## maven命令参数
 
@@ -175,6 +191,14 @@ pom属性，可在pom中直接引用，如${project.groupId}是项目的groupId
 - 举例
   - parent module有dependencies：module引入自己的dependencies和parent module的dependencies，自己的dependencies的version和scope优先
   - parent module有dependencyManagement：module引入自己的dependencies，如果没有指定version和scope的，会从parent module的dependencyManagement中获取
+
+#### 使用scope=import,type=pom解决单继承问题
+
+使用父module中dependencyManagement管理所有子module需要的依赖，子module中通过parent指向父module，可以达到单继承的效果，但可能导致父module中dependencyManagement定义过多，pom过长
+
+解法：将子module所需的依赖分类，每类定义在单独的pom中，在子module中使用dependencyManagement自行引入这些pom，可以达到多继承的效果
+
+注意：scope=import和type=pom要一起使用，且只能用在dependencyManagement里的dependency上
 
 ### 构建配置
 
